@@ -8,27 +8,15 @@ import SequenceBuilder
 import SwiftUI
 
 public protocol ColumnProtocol {
-    associatedtype Input
     associatedtype Header: View
     associatedtype Content: View
 
     var header: Header { get }
     var gridItem: GridItem { get }
-    func view(row: Row<Input>) -> Content
+    func view(row: Int) -> Content
 }
 
-public struct Row<Input> {
-    public let input: Input
-    public let row: Int
-}
-
-extension Row where Input: Collection, Input.Index == Int {
-    public var value: Input.Element {
-        input[row]
-    }
-}
-
-extension Either: ColumnProtocol where Left: ColumnProtocol, Right: ColumnProtocol, Left.Input == Right.Input {
+extension Either: ColumnProtocol where Left: ColumnProtocol, Right: ColumnProtocol {
     public var header: Either<Left.Header, Right.Header> {
         switch self {
         case let .left(column):
@@ -47,7 +35,7 @@ extension Either: ColumnProtocol where Left: ColumnProtocol, Right: ColumnProtoc
         }
     }
 
-    @ViewBuilder public func view(row: Row<Left.Input>) -> some View {
+    @ViewBuilder public func view(row: Int) -> some View {
         switch self {
         case let .left(column):
             column.view(row: row)

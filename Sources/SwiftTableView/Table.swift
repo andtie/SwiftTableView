@@ -29,36 +29,35 @@ extension Table {
 }
 
 extension Table {
-    public init(input: Column.Input, rowCount: Int, @SequenceBuilder builder: () -> [Column]) where Style == DefaultTableStyle<Column.Header, Column.Content> {
+    public init(rows: Int, @SequenceBuilder builder: () -> [Column]) where Style == DefaultTableStyle<Column.Header, Column.Content> {
         let columns = Array(builder())
         let gridItems = columns.map(\.gridItem)
         self.style = DefaultTableStyle()
         self.configuration = TableStyleConfiguration(
             gridItems: gridItems,
             columns: columns.count,
-            rows: rowCount,
+            rows: rows,
             header: { column in columns[column].header },
             cell: { row, column in
-                columns[column].view(row: Row(input: input, row: row))
+                columns[column].view(row: row)
             }
         )
-    }
-
-    public init<C: Collection>(collection: C, @SequenceBuilder builder: () -> [Column]) where C == Column.Input, Style == DefaultTableStyle<Column.Header, Column.Content> {
-        self.init(input: collection, rowCount: collection.count, builder: builder)
     }
 }
 
 struct Table_Previews: PreviewProvider {
+
+    static let numbers = (0...79).map { $0 + 0x1f600 }
+
     static var previews: some View {
-        Table(collection: (0...79).map { $0 + 0x1f600 }) {
-            Column { (row: Row<[Int]>) in Text(String(format: "%02X", row.value)) }
+        Table(rows: numbers.count) {
+            Column { Text(String(format: "%02X", numbers[$0])) }
                 .title("Codepoint")
                 .alignment(.leading)
-            Column { (row: Row<[Int]>) in Text(String(row.value)) }
-                .title("Integer")
+            Column { Text(String(numbers[$0])) }
+                .header(Image(systemName: "number"))
                 .alignment(.center)
-            Column { (row: Row<[Int]>) in Text(String(Character(UnicodeScalar(row.value)!))) }
+            Column { Text(String(Character(UnicodeScalar(numbers[$0])!))) }
                 .title("Emoji")
                 .alignment(.trailing)
         }

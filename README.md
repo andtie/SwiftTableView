@@ -4,14 +4,16 @@
 
 Example:
 ```swift
-Table(collection: (0...79).map { $0 + 0x1f600 }) {
-    Column { (row: Row<[Int]>) in Text(String(format: "%02X", row.value)) }
+let numbers = (0...79).map { $0 + 0x1f600 }
+
+Table(rows: numbers.count) {
+    Column { Text(String(format: "%02X", numbers[$0])) }
         .title("Codepoint")
         .alignment(.leading)
-    Column { (row: Row<[Int]>) in Text(String(row.value)) }
-        .title("Integer")
+    Column { Text(String(numbers[$0])) }
+        .header(Image(systemName: "number"))
         .alignment(.center)
-    Column { (row: Row<[Int]>) in Text(String(Character(UnicodeScalar(row.value)!))) }
+    Column { Text(String(Character(UnicodeScalar(numbers[$0])!))) }
         .title("Emoji")
         .alignment(.trailing)
 }

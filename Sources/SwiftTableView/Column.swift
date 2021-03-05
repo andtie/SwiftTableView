@@ -7,27 +7,27 @@
 import SequenceBuilder
 import SwiftUI
 
-public struct Column<Input, Header: View, Content: View>: ColumnProtocol {
+public struct Column<Header: View, Content: View>: ColumnProtocol {
     public let header: Header
     public let gridItem: GridItem
-    private let viewBuilder: (Row<Input>) -> Content
+    private let viewBuilder: (Int) -> Content
 
-    public func view(row: Row<Input>) -> Content {
+    public func view(row: Int) -> Content {
         viewBuilder(row)
     }
 }
 
 extension Column {
-    public init(_ view: @escaping (Row<Input>) -> Content) where Header == Text {
+    public init(_ view: @escaping (Int) -> Content) where Header == Text {
         self.init(header: Text(""), gridItem: GridItem(), viewBuilder: view)
     }
 
-    public func header<H: View>(_ header: H) -> Column<Input, H, Content> {
-        Column<Input, H, Content>(header: header, gridItem: gridItem, viewBuilder: viewBuilder)
+    public func header<H: View>(_ header: H) -> Column<H, Content> {
+        Column<H, Content>(header: header, gridItem: gridItem, viewBuilder: viewBuilder)
     }
 
-    public func title(_ title: String) -> Column<Input, Text, Content> {
-        Column<Input, Text, Content>(header: Text(title), gridItem: gridItem, viewBuilder: viewBuilder)
+    public func title(_ title: String) -> Column<Text, Content> {
+        Column<Text, Content>(header: Text(title), gridItem: gridItem, viewBuilder: viewBuilder)
     }
 
     public func gridItem(_ gridItem: GridItem) -> Self {
