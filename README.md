@@ -4,6 +4,8 @@
 
 Example:
 ```swift
+import SwiftTableView
+
 let numbers = (0...79).map { $0 + 0x1f600 }
 
 Table(rows: numbers.count) {
@@ -17,7 +19,6 @@ Table(rows: numbers.count) {
         .title("Emoji")
         .alignment(.trailing)
 }
-.padding()
 ```
 
 ![Example](preview.png "Example Table")
