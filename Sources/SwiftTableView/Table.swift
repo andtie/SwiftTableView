@@ -23,7 +23,7 @@ public struct Table<Column: ColumnProtocol, Style: TableStyle>: View where Style
 }
 
 extension Table {
-    public func tableStyle<S: TableStyle>(style: S) -> some View where S.Cell == Column.Content, S.Header == Column.Header {
+    public func tableStyle<S: TableStyle>(_ style: S) -> some View where S.Cell == Column.Content, S.Header == Column.Header {
         Table<Column, S>(style: style, configuration: configuration)
     }
 }
