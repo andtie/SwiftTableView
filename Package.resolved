@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SequenceBuilder",
+        "repositoryURL": "https://github.com/andtie/SequenceBuilder",
+        "state": {
+          "branch": null,
+          "revision": "2b0311a50698c703fa63f90c2b3b7c780263f4d3",
+          "version": "0.0.3"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
