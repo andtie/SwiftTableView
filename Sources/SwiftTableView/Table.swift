@@ -37,10 +37,8 @@ extension Table {
             gridItems: gridItems,
             columns: columns.count,
             rows: rows,
-            header: { column in columns[column].header },
-            cell: { row, column in
-                columns[column].view(row: row)
-            }
+            headerBuilder: { column in columns[column].header },
+            cellBuilder: { column, row in columns[column].view(row: row) }
         )
     }
 }
