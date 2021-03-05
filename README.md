@@ -4,14 +4,14 @@
 
 Example:
 ```swift
-TableView(collection: (0...79).map { $0 + 0x1f600 }) {
-    Column { (input: Int) in Text(String(format: "%02X", input)) }
+Table(collection: (0...79).map { $0 + 0x1f600 }) {
+    Column { (row: Row<[Int]>) in Text(String(format: "%02X", row.value)) }
         .title("Codepoint")
         .alignment(.leading)
-    Column { (input: Int) in Text(String(input)) }
+    Column { (row: Row<[Int]>) in Text(String(row.value)) }
         .title("Integer")
         .alignment(.center)
-    Column { (input: Int) in Text(String(Character(UnicodeScalar(input)!))) }
+    Column { (row: Row<[Int]>) in Text(String(Character(UnicodeScalar(row.value)!))) }
         .title("Emoji")
         .alignment(.trailing)
 }

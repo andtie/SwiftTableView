@@ -10,24 +10,18 @@ import SwiftUI
 public struct Column<Input, Header: View, Content: View>: ColumnProtocol {
     public let header: Header
     public let gridItem: GridItem
-    private let viewBuilder: (Input, Int) -> Content
+    private let viewBuilder: (Row<Input>) -> Content
 
-    public func view(input: Input, row: Int) -> Content {
-        viewBuilder(input, row)
+    public func view(row: Row<Input>) -> Content {
+        viewBuilder(row)
     }
 }
 
 extension Column {
-    public init(_ view: @escaping (Input, Int) -> Content) where Header == EmptyView {
-        self.init(header: EmptyView(), gridItem: GridItem(), viewBuilder: view)
+    public init(_ view: @escaping (Row<Input>) -> Content) where Header == Text {
+        self.init(header: Text(""), gridItem: GridItem(), viewBuilder: view)
     }
 
-    public init<Element>(_ view: @escaping (Element) -> Content) where Input == [Element], Header == EmptyView {
-        self.init(header: EmptyView(), gridItem: GridItem(), viewBuilder: { list, row in view(list[row]) })
-    }
-}
-
-extension Column {
     public func header<H: View>(_ header: H) -> Column<Input, H, Content> {
         Column<Input, H, Content>(header: header, gridItem: gridItem, viewBuilder: viewBuilder)
     }

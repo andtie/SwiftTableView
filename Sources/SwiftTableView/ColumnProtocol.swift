@@ -14,7 +14,18 @@ public protocol ColumnProtocol {
 
     var header: Header { get }
     var gridItem: GridItem { get }
-    func view(input: Input, row: Int) -> Content
+    func view(row: Row<Input>) -> Content
+}
+
+public struct Row<Input> {
+    public let input: Input
+    public let row: Int
+}
+
+extension Row where Input: Collection, Input.Index == Int {
+    public var value: Input.Element {
+        input[row]
+    }
 }
 
 extension Either: ColumnProtocol where Left: ColumnProtocol, Right: ColumnProtocol, Left.Input == Right.Input {
@@ -36,12 +47,12 @@ extension Either: ColumnProtocol where Left: ColumnProtocol, Right: ColumnProtoc
         }
     }
 
-    @ViewBuilder public func view(input: Left.Input, row: Int) -> some View {
+    @ViewBuilder public func view(row: Row<Left.Input>) -> some View {
         switch self {
         case let .left(column):
-            column.view(input: input, row: row)
+            column.view(row: row)
         case let .right(column):
-            column.view(input: input, row: row)
+            column.view(row: row)
         }
     }
 }

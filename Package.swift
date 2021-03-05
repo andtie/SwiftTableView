@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "SwiftTableView", targets: ["SwiftTableView"])
     ],
     dependencies: [
-        .package(name: "SequenceBuilder", url: "https://github.com/andtie/SequenceBuilder", from: "0.0.3" )
+        .package(name: "SequenceBuilder", url: "https://github.com/andtie/SequenceBuilder", from: "0.0.4" )
     ],
     targets: [
         .target(name: "SwiftTableView", dependencies: ["SequenceBuilder"])

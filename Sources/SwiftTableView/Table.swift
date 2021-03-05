@@ -1,5 +1,5 @@
 //
-// TableView.swift
+// Table.swift
 //
 // Created by Andreas in 2020
 //
@@ -7,7 +7,7 @@
 import SequenceBuilder
 import SwiftUI
 
-public struct TableView<Column: ColumnProtocol, Style: TableStyle>: View where Style.Cell == Column.Content, Style.Header == Column.Header {
+public struct Table<Column: ColumnProtocol, Style: TableStyle>: View where Style.Cell == Column.Content, Style.Header == Column.Header {
 
     let style: Style
     let configuration: TableStyleConfiguration<Style.Header, Style.Cell>
@@ -22,13 +22,13 @@ public struct TableView<Column: ColumnProtocol, Style: TableStyle>: View where S
     }
 }
 
-extension TableView {
+extension Table {
     public func tableStyle<S: TableStyle>(style: S) -> some View where S.Cell == Column.Content, S.Header == Column.Header {
-        TableView<Column, S>(style: style, configuration: configuration)
+        Table<Column, S>(style: style, configuration: configuration)
     }
 }
 
-extension TableView {
+extension Table {
     public init(input: Column.Input, rowCount: Int, @SequenceBuilder builder: () -> [Column]) where Style == DefaultTableStyle<Column.Header, Column.Content> {
         let columns = Array(builder())
         let gridItems = columns.map(\.gridItem)
@@ -38,7 +38,9 @@ extension TableView {
             columns: columns.count,
             rows: rowCount,
             header: { column in columns[column].header },
-            cell: { row, column in columns[column].view(input: input, row: row) }
+            cell: { row, column in
+                columns[column].view(row: Row(input: input, row: row))
+            }
         )
     }
 
@@ -47,16 +49,16 @@ extension TableView {
     }
 }
 
-struct TableView_Previews: PreviewProvider {
+struct Table_Previews: PreviewProvider {
     static var previews: some View {
-        TableView(collection: (0...79).map { $0 + 0x1f600 }) {
-            Column { (input: Int) in Text(String(format: "%02X", input)) }
+        Table(collection: (0...79).map { $0 + 0x1f600 }) {
+            Column { (row: Row<[Int]>) in Text(String(format: "%02X", row.value)) }
                 .title("Codepoint")
                 .alignment(.leading)
-            Column { (input: Int) in Text(String(input)) }
+            Column { (row: Row<[Int]>) in Text(String(row.value)) }
                 .title("Integer")
                 .alignment(.center)
-            Column { (input: Int) in Text(String(Character(UnicodeScalar(input)!))) }
+            Column { (row: Row<[Int]>) in Text(String(Character(UnicodeScalar(row.value)!))) }
                 .title("Emoji")
                 .alignment(.trailing)
         }
