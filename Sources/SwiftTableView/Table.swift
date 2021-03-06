@@ -12,7 +12,7 @@ public struct Table<Column: ColumnProtocol, Style: TableStyle>: View where Style
     let style: Style
     let configuration: TableStyleConfiguration<Style.Header, Style.Cell>
 
-    public init(style: Style, configuration: TableStyleConfiguration<Style.Header, Style.Cell>) {
+    init(style: Style, configuration: TableStyleConfiguration<Style.Header, Style.Cell>) {
         self.style = style
         self.configuration = configuration
     }
