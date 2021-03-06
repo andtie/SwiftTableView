@@ -18,21 +18,11 @@ public protocol ColumnProtocol {
 
 extension Either: ColumnProtocol where Left: ColumnProtocol, Right: ColumnProtocol {
     public var header: Either<Left.Header, Right.Header> {
-        switch self {
-        case let .left(column):
-            return .left(column.header)
-        case let .right(column):
-            return .right(column.header)
-        }
+        bimap(left: \.header, right: \.header)
     }
 
     public var gridItem: GridItem {
-        switch self {
-        case let .left(column):
-            return column.gridItem
-        case let .right(column):
-            return column.gridItem
-        }
+        fold(left: \.gridItem, right: \.gridItem)
     }
 
     @ViewBuilder public func view(row: Int) -> some View {
