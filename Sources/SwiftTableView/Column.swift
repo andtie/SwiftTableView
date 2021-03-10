@@ -22,8 +22,8 @@ extension Column {
         self.init(header: Text(""), gridItem: GridItem(), viewBuilder: view)
     }
 
-    public func header<H: View>(_ header: H) -> Column<H, Content> {
-        Column<H, Content>(header: header, gridItem: gridItem, viewBuilder: viewBuilder)
+    public func header<H: View>(@ViewBuilder _ header: () -> H) -> Column<H, Content> {
+        Column<H, Content>(header: header(), gridItem: gridItem, viewBuilder: viewBuilder)
     }
 
     public func title(_ title: String) -> Column<Text, Content> {

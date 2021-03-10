@@ -53,7 +53,7 @@ struct Table_Previews: PreviewProvider {
                 .title("Codepoint")
                 .alignment(.leading)
             Column { Text(String(numbers[$0])) }
-                .header(Image(systemName: "number"))
+                .header { Image(systemName: "number") }
                 .alignment(.center)
             Column { Text(String(Character(UnicodeScalar(numbers[$0])!))) }
                 .title("Emoji")
