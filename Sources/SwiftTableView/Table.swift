@@ -7,12 +7,12 @@
 import SequenceBuilder
 import SwiftUI
 
-public struct Table<Column: ColumnProtocol, Style: TableStyle>: View where Style.Cell == Column.Content, Style.Header == Column.Header {
+public struct Table<Column: ColumnProtocol, Style: TableStyle>: View where Style.Cell == Column.Content, Style.Header == Column.Header, Style.Footer == Column.Footer {
 
     let style: Style
-    let configuration: TableStyleConfiguration<Style.Header, Style.Cell>
+    let configuration: TableStyleConfiguration<Style.Header, Style.Cell, Style.Footer>
 
-    init(style: Style, configuration: TableStyleConfiguration<Style.Header, Style.Cell>) {
+    init(style: Style, configuration: TableStyleConfiguration<Style.Header, Style.Cell, Style.Footer>) {
         self.style = style
         self.configuration = configuration
     }
@@ -23,13 +23,13 @@ public struct Table<Column: ColumnProtocol, Style: TableStyle>: View where Style
 }
 
 extension Table {
-    public func tableStyle<S: TableStyle>(_ style: S) -> some View where S.Cell == Column.Content, S.Header == Column.Header {
+    public func tableStyle<S: TableStyle>(_ style: S) -> some View where S.Cell == Column.Content, S.Header == Column.Header, S.Footer == Column.Footer {
         Table<Column, S>(style: style, configuration: configuration)
     }
 }
 
 extension Table {
-    public init(rows: Int, @SequenceBuilder builder: () -> [Column]) where Style == DefaultTableStyle<Column.Header, Column.Content> {
+    public init(rows: Int, @SequenceBuilder builder: () -> [Column]) where Style == DefaultTableStyle<Column.Header, Column.Content, Column.Footer> {
         let columns = Array(builder())
         let gridItems = columns.map(\.gridItem)
         self.style = DefaultTableStyle()
@@ -38,7 +38,8 @@ extension Table {
             columns: columns.count,
             rows: rows,
             headerBuilder: { column in columns[column].header },
-            cellBuilder: { column, row in columns[column].view(row: row) }
+            cellBuilder: { column, row in columns[column].view(row: row) },
+            footerBuilder: { column in columns[column].footer }
         )
     }
 }
@@ -52,6 +53,7 @@ struct Table_Previews: PreviewProvider {
             Column { Text(String(format: "%02X", numbers[$0])) }
                 .title("Codepoint")
                 .alignment(.leading)
+                .footer({ Text("Total: \(numbers.count)") })
             Column { Text(String(numbers[$0])) }
                 .header { Image(systemName: "number") }
                 .alignment(.center)
@@ -59,6 +61,7 @@ struct Table_Previews: PreviewProvider {
                 .title("Emoji")
                 .alignment(.trailing)
         }
+//        .tableStyle(RotatedTableStyle())
         .padding()
     }
 }

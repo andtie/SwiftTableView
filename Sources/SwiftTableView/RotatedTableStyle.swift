@@ -6,10 +6,10 @@
 
 import SwiftUI
 
-public struct RotatedTableStyle<Header: View, Cell: View>: TableStyle {
+public struct RotatedTableStyle<Header: View, Cell: View, Footer: View>: TableStyle {
     public init() {}
 
-    public func makeBody(configuration: TableStyleConfiguration<Header, Cell>) -> some View {
+    public func makeBody(configuration: TableStyleConfiguration<Header, Cell, Footer>) -> some View {
         HStack {
             LazyHGrid(rows: configuration.gridItems) {
                 ForEach(0..<configuration.columns) { column in
@@ -25,6 +25,9 @@ public struct RotatedTableStyle<Header: View, Cell: View>: TableStyle {
                             configuration.cell(column: column, row: row)
                                 .id("\(column)-\(row)")
                         }
+                    }
+                    ForEach(0..<configuration.columns) { column in
+                        configuration.footer(column: column)
                     }
                 }
             }
