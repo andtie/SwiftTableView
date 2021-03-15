@@ -30,6 +30,8 @@ public struct TableStyleConfiguration<Header: View, Cell: View, Footer: View> {
     public let gridItems: [GridItem]
     public let columns: Int
     public let rows: Int
+    public let spacing: CGFloat?
+
     let headerBuilder: (Int) -> Header
     let cellBuilder: (Int, Int) -> Cell
     let footerBuilder: (Int) -> Footer
@@ -44,5 +46,13 @@ public struct TableStyleConfiguration<Header: View, Cell: View, Footer: View> {
 
     public func footer(column: Int) -> Footer {
         footerBuilder(column)
+    }
+
+    public var hasEmptyHeaders: Bool {
+        (0..<columns).allSatisfy { (header(column: $0) is _DefaultViewProtocol) }
+    }
+
+    public var hasEmptyFooters: Bool {
+        (0..<columns).allSatisfy { (footer(column: $0) is _DefaultViewProtocol) }
     }
 }

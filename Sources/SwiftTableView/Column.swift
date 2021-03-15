@@ -18,9 +18,19 @@ public struct Column<Header: View, Content: View, Footer: View>: ColumnProtocol 
     }
 }
 
+protocol _DefaultViewProtocol {}
+
+public struct _DefaultView: View, _DefaultViewProtocol {
+    public var body: some View {
+        Text("")
+    }
+}
+
+extension Either: _DefaultViewProtocol where Left: _DefaultViewProtocol, Right: _DefaultViewProtocol {}
+
 extension Column {
-    public init(_ view: @escaping (Int) -> Content) where Header == Text, Footer == Text {
-        self.init(header: Text(""), footer: Text(""), gridItem: GridItem(), viewBuilder: view)
+    public init(@ViewBuilder _ view: @escaping (Int) -> Content) where Header == _DefaultView, Footer == _DefaultView {
+        self.init(header: _DefaultView(), footer: _DefaultView(), gridItem: GridItem(), viewBuilder: view)
     }
 
     public func header<H: View>(@ViewBuilder _ header: () -> H) -> Column<H, Content, Footer> {

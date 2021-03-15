@@ -29,7 +29,7 @@ extension Table {
 }
 
 extension Table {
-    public init(rows: Int, @SequenceBuilder builder: () -> [Column]) where Style == DefaultTableStyle<Column.Header, Column.Content, Column.Footer> {
+    public init(rows: Int, spacing: CGFloat? = nil, @SequenceBuilder builder: () -> [Column]) where Style == DefaultTableStyle<Column.Header, Column.Content, Column.Footer> {
         let columns = Array(builder())
         let gridItems = columns.map(\.gridItem)
         self.style = DefaultTableStyle()
@@ -37,6 +37,7 @@ extension Table {
             gridItems: gridItems,
             columns: columns.count,
             rows: rows,
+            spacing: spacing,
             headerBuilder: { column in columns[column].header },
             cellBuilder: { column, row in columns[column].view(row: row) },
             footerBuilder: { column in columns[column].footer }
